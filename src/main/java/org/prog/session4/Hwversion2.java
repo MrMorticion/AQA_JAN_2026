@@ -26,8 +26,6 @@ public class Hwversion2 {
             String top = emails[i];
 
             int моятебянепонимать = top.indexOf('@');
-
-
             if (моятебянепонимать== -1) {
                 System.out.println("fail: no @ - " + top);
             } else if (моятебянепонимать != top.lastIndexOf('@')) {
