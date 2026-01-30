@@ -27,7 +27,7 @@ public class Hwversion2 {
 
             int моятебянепонимать = top.indexOf('@');
 
-            // Проверки
+
             if (моятебянепонимать== -1) {
                 System.out.println("fail: no @ - " + top);
             } else if (моятебянепонимать != top.lastIndexOf('@')) {
