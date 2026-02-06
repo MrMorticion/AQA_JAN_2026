@@ -3,6 +3,8 @@ package org.prog.session3;
 //TODO: Write bubble sort
 //TODO: Fill array with random numbers *
 
+import java.util.Random;
+
 public class BubbleSort {
 
     public static void main(String[] args) {
@@ -13,16 +15,29 @@ public class BubbleSort {
         //1,0,4,5,8,8,9,12
         //0,1,4,5,8,8,9,12
         //0,1,4,5,8,8,9,12 < DONE
-
-        int[] myArrayToSort = new int[10];
+        Random random = new Random();
+        int[] myArrayToSort = new int[100];
+        for (int i = 0; i < myArrayToSort.length; i++) {
+            myArrayToSort[i] = random.nextInt(1000);
+            System.out.println(myArrayToSort[i]);
+        }
+        System.out.println("===============================================");
         boolean condition = true;
 
-        while (condition) {
-            for (int i = 0; i < myArrayToSort.length; i++) {
-                //if current element > next element > switch places
-                //if switch happened -> condition = true
-                //if no switch happened -> condition = false -> end sorting
+        do {
+            condition = false;
+            for (int i = 0; i < myArrayToSort.length - 1; i++) {
+                if (myArrayToSort[i] > myArrayToSort[i + 1]) {
+                    int current = myArrayToSort[i];
+                    myArrayToSort[i] = myArrayToSort[i + 1];
+                    myArrayToSort[i + 1] = current;
+                    condition = true;
+                }
             }
+        } while (condition);
+
+        for (int i = 0; i < myArrayToSort.length; i++) {
+            System.out.println(myArrayToSort[i]);
         }
     }
 }
