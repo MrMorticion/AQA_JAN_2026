@@ -17,7 +17,7 @@ public class Mercedes implements ICar, ITransport {
     }
 
     @Override
-    public void stop() {
+    public final void stop() {
         System.out.println("Mercedes stop");
     }
 
