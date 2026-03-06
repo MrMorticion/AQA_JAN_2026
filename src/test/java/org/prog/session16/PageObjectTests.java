@@ -1,4 +1,4 @@
-package org.prog.session15;
+package org.prog.session16;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -7,28 +7,25 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.prog.session16.page.W3ShcoolsPage;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
 
-//TODO: load allo.ua (done)
-//TODO: search for iphone (done)
-//TODO: find prices for first 3 items
-//TODO: assert price not null
+//TODO: Re-work you allo.ua tests to use page object
 
-//TODO: * - confirm goods it not null for first 3 items
-//TODO: * - if doing this, use maximize (see below)
-
-public class WebTests {
+public class PageObjectTests {
 
     private WebDriver driver;
+    private W3ShcoolsPage w3ShcoolsPage;
 
     @BeforeSuite
     public void setUp() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
+        w3ShcoolsPage = new W3ShcoolsPage(driver);
     }
 
     @AfterSuite
@@ -38,23 +35,11 @@ public class WebTests {
 
     @Test
     public void actionsTest() {
-        driver.get("https://www.w3schools.com/cssref/tryit.php?filename=trycss_sel_hover");
-
-//        JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
-//        jsExecutor.executeScript("alert('Hello Selenium!')");
+        w3ShcoolsPage.loadPage("/cssref/tryit.php?filename=trycss_sel_hover");
+        w3ShcoolsPage.acceptCookiesIfPresent();
+        w3ShcoolsPage.switchToFrame(By.id("iframeResult_0"));
 
         WebDriverWait webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement cookiesFrame =
-                webDriverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("fast-cmp-iframe")));
-        driver.switchTo().frame(cookiesFrame);
-        //accept cookies
-        webDriverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[text()='Accept']")))
-                .click();
-        driver.switchTo().defaultContent();
-
-        WebElement iFrame = webDriverWait.until(
-                ExpectedConditions.presenceOfElementLocated(By.id("iframeResult_0")));
-        driver.switchTo().frame(iFrame);
 
         Actions linkActions = new Actions(driver);
         WebElement link1 = webDriverWait.until(
@@ -66,31 +51,18 @@ public class WebTests {
         linkActions.moveToElement(link2);
         linkActions.pause(Duration.ofSeconds(5));
         linkActions.perform();
-        System.out.println("done!");
-
     }
 
     @Test
     public void iFrameTest() {
-        driver.get("https://www.w3schools.com/tags/tryit.asp?filename=tryhtml_button_test");
+        w3ShcoolsPage.loadPage("/tags/tryit.asp?filename=tryhtml_button_test");
+        w3ShcoolsPage.acceptCookiesIfPresent();
+        w3ShcoolsPage.switchToFrame(By.id("iframeResult"));
         WebDriverWait webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement cookiesFrame =
-                webDriverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("fast-cmp-iframe")));
-        driver.switchTo().frame(cookiesFrame);
-        //accept cookies
-        webDriverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[text()='Accept']")))
-                .click();
-
-        driver.switchTo().defaultContent();
-        //switch to iFrame
-        WebElement iFrame = driver.findElement(By.id("iframeResult"));
-        driver.switchTo().frame(iFrame);
-
         WebElement element =
                 webDriverWait.until(
                         ExpectedConditions.visibilityOfElementLocated(
                                 By.xpath("//button[text()='Click Me!']")));
-        System.out.println(element.isDisplayed());
     }
 
     @Test
