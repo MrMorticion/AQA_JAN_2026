@@ -87,4 +87,10 @@ public class Main {
 //
 //        car.goTo("somewhere");
     }
+
+    public static interface IPhone {
+        void call(String someone);
+
+        void unlockScreen();
+    }
 }
