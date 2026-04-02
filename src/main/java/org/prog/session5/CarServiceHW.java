@@ -1,8 +1,8 @@
 package org.prog.session5;
 
-public class CarServiceHW {
+public class CarServiceHw {
 
-    public void paintCar(HWCar car, String color) {
+    public void paintCar(CarHw car, String color) {
         System.out.println("Received car to paint with color: " + car.color);
         System.out.println("New color " + color);
         car.color = color;
