@@ -14,12 +14,10 @@ import java.util.OptionalInt;
 
 public class AlloDBSteps {
 
-    private static final String PHONE_TABLE_NAME = "Persons";
-    private static final String PHONE_MODEL_COLUMN = "FirstName";
-    private static final String PHONE_PRICE_COLUMN = "LastName";
-    private static final String PHONE_GENDER_VALUE = "PHONE";
-    private static final String PHONE_TITLE_VALUE = "PHONE";
-    private static final String PHONE_NAT_VALUE = "ALLO";
+    private static final String PHONE_TABLE_NAME = "Phones";
+    private static final String PHONE_ID_COLUMN = "PhoneID";
+    private static final String PHONE_MODEL_COLUMN = "Model";
+    private static final String PHONE_PRICE_COLUMN = "Price";
 
     public static Connection conn;
 
@@ -29,10 +27,12 @@ public class AlloDBSteps {
         Assert.assertNotNull(phones, "No Allo phones found by alias: " + alias);
         Assert.assertFalse(phones.isEmpty(), "No Allo phones were collected from the page");
 
+        ensurePhoneTableExists();
+
         try (PreparedStatement selectStatement = conn.prepareStatement(
                 "SELECT " + PHONE_PRICE_COLUMN + " FROM " + PHONE_TABLE_NAME + " WHERE " + PHONE_MODEL_COLUMN + " = ?");
              PreparedStatement insertStatement = conn.prepareStatement(
-                     "INSERT INTO " + PHONE_TABLE_NAME + " (FirstName, LastName, Gender, Title, Nat) VALUES (?, ?, ?, ?, ?)")) {
+                     "INSERT INTO " + PHONE_TABLE_NAME + " (" + PHONE_MODEL_COLUMN + ", " + PHONE_PRICE_COLUMN + ") VALUES (?, ?)")) {
 
             for (Map<?, ?> phone : phones) {
                 String model = String.valueOf(phone.get("model"));
@@ -46,13 +46,23 @@ public class AlloDBSteps {
                     );
                 } else {
                     insertStatement.setString(1, model);
-                    insertStatement.setString(2, String.valueOf(price));
-                    insertStatement.setString(3, PHONE_GENDER_VALUE);
-                    insertStatement.setString(4, PHONE_TITLE_VALUE);
-                    insertStatement.setString(5, PHONE_NAT_VALUE);
+                    insertStatement.setInt(2, price);
                     insertStatement.execute();
                 }
             }
+        }
+    }
+
+    private void ensurePhoneTableExists() throws SQLException {
+        try (PreparedStatement createStatement = conn.prepareStatement(
+                "CREATE TABLE IF NOT EXISTS " + PHONE_TABLE_NAME + " (" +
+                        PHONE_ID_COLUMN + " INT UNIQUE AUTO_INCREMENT NOT NULL, " +
+                        PHONE_MODEL_COLUMN + " VARCHAR(255) NOT NULL, " +
+                        PHONE_PRICE_COLUMN + " INT NOT NULL, " +
+                        "PRIMARY KEY (" + PHONE_ID_COLUMN + "), " +
+                        "UNIQUE (" + PHONE_MODEL_COLUMN + ")" +
+                        ")")) {
+            createStatement.execute();
         }
     }
 
